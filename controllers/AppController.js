@@ -14,7 +14,7 @@ class AppController {
 
   static async getStats(req, res) {
     const users = await redisClient.nbUsers();
-    const files = await redis.client.nbFiles();
+    const files = await redisClient.nbFiles();
     console.log(users);
     res.status(200).json(users, files);
   }
