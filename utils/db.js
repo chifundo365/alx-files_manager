@@ -22,10 +22,11 @@ class DBClient {
    */
   async nbUsers() {
     try {
-      return await this.client.db().collection('users').countDocuments();
+      const n = await this.client.db().collection('users').countDocuments();
+      return n;
     } catch (err) {
       console.error('Error fetching user count', err);
-      throw err;
+      return 0;
     }
   }
 
@@ -34,10 +35,11 @@ class DBClient {
    */
   async nbFiles() {
     try {
-      return await this.client.db().collection('files').countDocuments();
+      const n = await this.client.db().collection('files').countDocuments();
+      return n;
     } catch (error) {
       console.error('Error fetching file count');
-      throw error;
+      return 0;
     }
   }
 }

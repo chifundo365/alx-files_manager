@@ -8,15 +8,16 @@ class AppController {
 
     if (dbStatus && redisStatus) {
       res.status(200).json({ redis: true, db: true });
+    } else {
+      res.status(500).json({ redis: false, db: false });
     }
-    res.status(500).json({ redis: false, db: false });
   }
 
-  static async getStats(req, res) {
-    const users = await redisClient.nbUsers();
-    const files = await redisClient.nbFiles();
-    console.log(users);
-    res.status(200).json(users, files);
+  static getStats(req, res) {
+    Promise.all([dbClient.nbUsers(), dbClient.nbFiles()]).then((data) => {
+      const [users, files] = data;
+      res.status(200).json({ users, files });
+    }).catch((error) => console.error(error));
   }
 }
 
