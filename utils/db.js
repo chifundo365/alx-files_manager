@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import crypto from 'crypto';
 
 class DBClient {
   constructor() {
@@ -41,6 +42,21 @@ class DBClient {
       console.error('Error fetching file count');
       return 0;
     }
+  }
+
+  async exists(condition) {
+    const exists = await this.db.collection('users').findOne(condition);
+    if (exists) return true;
+    return false;
+  }
+
+  async createUser(obj) {
+    const hash = crypto.createHash('sha1');
+    hash.update(obj.password);
+    const hashedPassword = hash.digest('hex');
+
+    const result = await this.db.collection('users').insertOne({ ...obj, password: hashedPassword });
+    return result.insertedId;
   }
 }
 
